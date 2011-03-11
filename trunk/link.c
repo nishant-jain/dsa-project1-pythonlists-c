@@ -109,10 +109,22 @@ void insert(int pos,int ele, struct node *f)
 	}
 	}
 	display(front);
-		
-		
+}		
+int count(struct node *f, int ele)
+	{	int counter=0;
+		while(f!=NULL)
+			{
+				if(f->value==ele)
+				{	f=f->next;
+					counter++;				
+				}
+				else
+					f=f->next;
+			}
+		return counter;
+	}		
 	
-}
+
 int node_index(struct node *f,int x)
 {	int found=-1;
 	int pos=0;
@@ -127,15 +139,6 @@ int node_index(struct node *f,int x)
 	return found;
 }
 
-int count(struct node *f,int x)
-{	int sum=0;
-	while(f!=NULL)
-		{
-			if(f->value==x)
-				sum++;
-		}
-	return sum;
-}
 
 
 
@@ -151,7 +154,9 @@ void main()
 	append();append();
 	display(front);
 	insert(4,45,front);
-	printf("index of 3 %d",node_index(front,45)); 	
+	printf("index of 3 %d",node_index(front,45));
+	printf("count of 5 %d",count(front,5)); 	
+		
 	display(front);	
 }
 
