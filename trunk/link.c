@@ -29,12 +29,12 @@ list.extend(L)
 ~~~~~list.insert(i, x)
   
 
-list.remove(x)
+~~~~~~list.remove(x)
   
 
-list.pop([i])
+~~~~~list.pop([i])
   
-list.index(x)
+~~~~~~~~~~~~~list.index(x)
   
 
 ~~~~~list.count(x)
@@ -45,6 +45,55 @@ list.sort()
 list.reverse()
 
 */
+int pop(struct node *f, int pos)            //if no input pos is given, then?? //check what happens to rear node if last node is removed in pop() and remove_node()
+	{
+		int cur_pos=0;
+		struct node *pre;
+		pre=malloc(sizeof(struct node));
+		pre=f;
+		while(cur_pos<pos)
+			{	pre=f;
+				cur_pos++;
+				f=f->next;	
+			}
+		int k=f->value;
+		pre->next=f->next;
+		return k;			
+	
+	}
+
+int remove_node(struct node *f, int x)
+	{	
+		int found=-1;
+		struct node *pre;
+		pre=malloc(sizeof(struct node));
+		pre=f;
+		if(f->value==x)
+			{	found=1;
+				front=front->next;
+				return found;
+			}
+		else
+		while(f!=NULL)
+			{
+				if(f->value==x)
+					{
+						found=1;
+						pre->next=f->next;
+						break;
+					}
+				else
+					{
+						pre=f;
+						f=f->next;
+					}	
+			}
+		
+		return found;
+						
+
+	}
+
 void append()
 {
 
@@ -110,6 +159,8 @@ void insert(int pos,int ele, struct node *f)
 	}
 	display(front);
 }		
+
+
 int count(struct node *f, int ele)
 	{	int counter=0;
 		while(f!=NULL)
@@ -143,8 +194,6 @@ int node_index(struct node *f,int x)
 
 
 
-//void remove
-
 void main()
 {	front = rear=NULL;
 	append();
@@ -156,7 +205,10 @@ void main()
 	insert(4,45,front);
 	printf("index of 3 %d",node_index(front,45));
 	printf("count of 5 %d",count(front,5)); 	
-		
+/*	int k=remove_node(front,45);		
+	display(front);	
+	k=remove_node(front,0);*/
+	printf("popped elemnt %d",pop(front,2));		
 	display(front);	
 }
 
