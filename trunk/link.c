@@ -21,35 +21,6 @@ display (struct node *f)
 
 }
 
-/*
-
-~~~~~list.append(x)
-  
-
-~~~~~~list.extend(L)
-  
-
-~~~~~list.insert(i, x)
-  
-
-~~~~~~list.remove(x)
-  
-
-~~~~~list.pop([i])
-  
-~~~~~~~~~~~~~list.index(x)
-  
-
-~~~~~list.count(x)
-
-list.sort()
-
-
-list.reverse()
-
-*/
-
-
 
 int
 pop (struct node *f, int pos)	//if no input pos is given, then?? //check what happens to rear node if last node is removed in pop() and remove_node()
@@ -58,14 +29,29 @@ pop (struct node *f, int pos)	//if no input pos is given, then?? //check what ha
   struct node *pre;
   pre = malloc (sizeof (struct node));
   pre = f;
-  while (cur_pos < pos)
+  int k;
+  if (pos == 0)
     {
-      pre = f;
-      cur_pos++;
-      f = f->next;
+      k = f->value;
+      front = front->next;
     }
-  int k = f->value;
-  pre->next = f->next;
+  else
+    {
+      while (cur_pos < pos && f != rear)
+	{
+	  pre = f;
+	  cur_pos++;
+	  f = f->next;
+	}
+      k = f->value;
+      if (f == rear && cur_pos == pos)
+	{
+	  rear = pre;
+	  rear->next = NULL;
+	}
+      else if (f != rear && cur_pos == pos)
+	pre->next = f->next;
+    }
   return k;
 
 }
@@ -88,9 +74,19 @@ remove_node (struct node *f, int x)
       {
 	if (f->value == x)
 	  {
-	    found = 1;
-	    pre->next = f->next;
-	    break;
+	    if (f == rear)
+	      {
+		found = 1;
+		rear = pre;
+		rear->next = NULL;
+		break;
+	      }
+	    else
+	      {
+		found = 1;
+		pre->next = f->next;
+		break;
+	      }
 	  }
 	else
 	  {
@@ -133,7 +129,8 @@ extend (struct node *f)
 {
   char str[5] = "";
   int no;
-  printf ("Enter an element ");
+  printf ("enter 'a' to stop entering elements\n Enter an element");
+  getchar ();
   gets (str);
 
   while (strcmp (str, "a") != 0)
@@ -175,7 +172,7 @@ insert (int pos, int ele, struct node *f)
   else
     {
 
-      while (cur_pos < pos && f!=rear)
+      while (cur_pos < pos && f != rear)
 	{
 	  pre = f;
 	  f = f->next;
@@ -195,7 +192,7 @@ insert (int pos, int ele, struct node *f)
 	  rear = newnode;
 	}
     }
-  display (front);
+
 }
 
 
@@ -239,9 +236,22 @@ node_index (struct node *f, int x)
   return found;
 }
 
-void reverse(struct node *f)
+void
+reverse (struct node *f)
 {
-	
+  struct node *a, *b, *c;
+  rear = front;
+
+  b = NULL;
+  while (f != NULL)
+    {
+      a = b;
+      b = f;
+      f = f->next;
+      b->next = a;
+    }
+  front = b;
+  rear->next = NULL;
 }
 
 
@@ -249,22 +259,106 @@ void reverse(struct node *f)
 void
 main ()
 {
+  char ch = 'n';
+  int choice = 0;
+  int num, pos;
   front = rear = NULL;
-  append (4);
-  //display(front);
-  append (5);
-  //display(front);
-  append (2);
-  append (6);
+
+  char str[5] = "";
+  int no;
+  printf ("enter 'a' to stop entering elements\n Enter an element");
+  gets (str);
+
+  while (strcmp (str, "a") != 0)
+    {
+      no = atoi (str);
+      append (no);
+      printf ("Enter an element ");
+      gets (str);
+
+    }
   display (front);
-  insert (4, 45, front);
-  printf ("index of 3 %d", node_index (front, 45));
-  printf ("count of 5 %d", count (front, 5));
-/*	int k=remove_node(front,45);		
-	display(front);	
-	k=remove_node(front,0);*/
-  //printf("popped elemnt %d",pop(front,2));
-  display (front);
-  extend (front);
-  display (front);
+  do
+    {
+      printf ("\nLinked list implementation\n");
+      printf
+	("\t1.append\n\t2.extend\n\t3.insert\n\t4.remove\n\t5.pop\n\t6.index\n\t7.count\n\t8.sort\n\t9.reverse\n\t10.display\n\t11.exit");
+      printf ("\nEnter a choice \n:");
+
+      scanf ("%d", &choice);
+      switch (choice)
+	{
+	case 1:
+	  {
+	    printf ("enter a value to append ");
+	    scanf ("%d", &num);
+	    append (num);
+	    display (front);
+	    break;
+	  }
+	case 2:
+	  extend (front);
+	  display (front);
+	  break;
+	case 3:
+	  {
+	    printf ("enter a value and position separated by a comma");
+	    scanf ("%d,%d", &num, &pos);
+	    insert (pos, num, front);
+	    display (front);
+	    break;
+	  }
+	case 4:
+	  {
+	    printf ("enter a value to remove ");
+	    scanf ("%d", &num);
+	    remove_node (front, num);
+	    display (front);
+	    break;
+	  }
+	case 5:
+	  {
+	    printf ("enter the position ");
+	    scanf ("%d", &pos);
+	    printf ("pop function returned %d", pop (front, pos));
+	    display (front);
+	    break;
+	  }
+	case 6:
+	  {
+	    printf ("enter whose index is to be returned ");
+	    scanf ("%d", &num);
+	    if (node_index (front, num) == -1)
+	      printf ("Error! element not found\n");
+	    else
+	      printf ("Index of %d is %d", num, node_index (front, num));
+	    break;
+	  }
+	case 7:
+	  {
+	    printf ("enter a number ");
+	    scanf ("%d", &num);
+	    printf ("\n%d appears %d times", num, count (front, num));
+	    break;
+	  }
+	case 8:
+	  printf ("Sort function unavailable.");
+	  break;		// couldn't figure out how to swap nodes properly
+	case 9:
+	  reverse (front);
+	  display (front);
+	  break;
+	case 10:
+	  display (front);
+	  break;
+	case 11:
+	  exit (0);
+	  break;
+	default:
+	  printf ("Enter a valid option\n");
+	}
+
+
+    }
+  while (1 == 1);
 }
